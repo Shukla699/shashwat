@@ -1,5 +1,6 @@
 import axios from "../../api/axiosconfig.js";
 import { loaduser, removeuser } from "../reducers/userSlice";
+import { toast } from "react-toastify";
 
 export const asynccurrentuser = () => async (dispatch, getState) => {
     try {
@@ -26,19 +27,26 @@ export const asyncloginuser = (user) => async (dispatch, getState) => {
         const { data } = await axios.get(
             `/users?email=${user.email}&password=${user.password}`
         );
-        localStorage.setItem("user", JSON.stringify(data[0]));
-        dispatch(asynccurrentuser())
+        if (data.length > 0) {
+            localStorage.setItem("user", JSON.stringify(data[0]));
+            dispatch(asynccurrentuser());
+            toast.success("Login successful!");
+        } else {
+            toast.error("Invalid email or password!");
+        }
     } catch (error) {
         console.log(error);
+        toast.error("Login failed. Please try again.");
     }
 };
 
 export const asyncregisteruser = (user) => async (dispatch, getState) => {
     try {
         const res = await axios.post("/users", user);
-        console.log(res);
+        toast.success("Registration successful! Please login.");
     } catch (error) {
         console.log(error);
+        toast.error("Registration failed. Please try again.");
     }
 };
 

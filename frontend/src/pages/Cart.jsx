@@ -51,7 +51,6 @@ const Cart = () => {
             };
         } else {
             copyuser.cart.splice(index, 1);
-            Navigate("/");
         }
         dispatch(asyncupdateuser(copyuser.id, copyuser));
     };

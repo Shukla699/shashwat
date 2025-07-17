@@ -6,7 +6,7 @@ const ProductTemplate = lazy(() => import("../components/ProductTemplate"));
 const Products = () => {
 
     
-    const { products, hasMore, fetchproducts } = useInfiniteProducts();
+    const { products, hasMore, fetchproducts, loading } = useInfiniteProducts();
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
 
@@ -55,7 +55,7 @@ const Products = () => {
                 hasMore={hasMore}
                 loader={
                     <div className="flex justify-center py-10">
-                        <span className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></span>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
                     </div>
                 }
                 endMessage={

@@ -10,6 +10,7 @@ const ProductTemplate = ({ product }) => {
 
     const addToCartHandler = (product) => {
         if (!users) return;
+        
         const copyUser = Array.isArray(users.cart)
             ? { ...users, cart: [...users.cart] }
             : { ...users, cart: [] };
@@ -28,7 +29,7 @@ const ProductTemplate = ({ product }) => {
         if (copyUser.id) {
             dispatch(asyncupdateuser(copyUser.id, copyUser));
         }
-        navigate("/Cart")
+        navigate("/cart");
     };
 
     return (
