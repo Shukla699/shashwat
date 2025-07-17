@@ -17,6 +17,13 @@ const Nav = ({ themeIdx, setThemeIdx, themes }) => {
             >
                 <span className="mr-2">🏠</span> Home
             </NavLink>
+            
+            <NavLink
+                to="/products"
+                className={`${linkClass} ${underlineEffect}`}
+            >
+                <span className="mr-2">🛍️</span> Products
+            </NavLink>
 
             {user ? (
                 <>
