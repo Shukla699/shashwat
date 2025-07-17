@@ -1,4 +1,4 @@
-import axios from "../../api/axiosconfig";
+import axios from "../../api/axiosconfig.js";
 import { loadproduct } from "../reducers/productSlice";
 
 export const asyncloadproducts = () => async (dispatch, getState) => {

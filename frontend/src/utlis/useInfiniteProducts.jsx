@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadlazyproduct } from '../store/reducers/productSlice';
-import axios from "../api/axiosconfig";
+import axios from "../api/axiosconfig.js";
 // ...other imports...
 
 

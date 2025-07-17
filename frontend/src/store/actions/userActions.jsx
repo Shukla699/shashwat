@@ -1,4 +1,4 @@
-import axios from "../../api/axiosconfig";
+import axios from "../../api/axiosconfig.js";
 import { loaduser, removeuser } from "../reducers/userSlice";
 
 export const asynccurrentuser = () => async (dispatch, getState) => {
