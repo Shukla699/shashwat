@@ -7,7 +7,8 @@ export const asyncloadproducts = () => async (dispatch, getState) => {
         const { data } = await axios.get("/products");
         dispatch(loadproduct(data));
     } catch (error) {
-        console.log(error);
+        console.error("Load products error:", error);
+        toast.error("Failed to load products.");
     }
 };
 
@@ -17,7 +18,7 @@ export const asynccreateproduct = (product) => async (dispatch, getState) => {
         dispatch(asyncloadproducts());
         toast.success("Product created successfully!");
     } catch (error) {
-        console.log(error);
+        console.error("Create product error:", error);
         toast.error("Failed to create product.");
     }
 };
@@ -29,19 +30,18 @@ export const asyncupdateproduct =
             dispatch(asyncloadproducts());
             toast.success("Product updated successfully!");
         } catch (error) {
-            console.log(error);
+            console.error("Update product error:", error);
             toast.error("Failed to update product.");
         }
     };
-    export const asyncdeleteproduct = (id) => async (dispatch, getState) => {
+
+export const asyncdeleteproduct = (id) => async (dispatch, getState) => {
     try {
         await axios.delete("/products/" + id);
         dispatch(asyncloadproducts());
         toast.success("Product deleted successfully!");
     } catch (error) {
-        console.log(error);
+        console.error("Delete product error:", error);
         toast.error("Failed to delete product.");
     }
 };
-
-// productActions.jsx

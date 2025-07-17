@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadlazyproduct } from '../store/reducers/productSlice';
 import axios from "../api/axiosconfig.js";
-// ...other imports...
 
 
 const useInfiniteProducts = () => {
     const dispatch = useDispatch();
     const products = useSelector((state) => state.productReducer.products || []);
-    const users = useSelector((state) => state.userReducer.users);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
 
@@ -24,7 +22,7 @@ const useInfiniteProducts = () => {
                 dispatch(loadlazyproduct(data));
             }
         } catch (error) {
-            console.log(error);
+            console.error("Fetch products error:", error);
             setHasMore(false);
         } finally {
             setLoading(false);
@@ -33,7 +31,7 @@ const useInfiniteProducts = () => {
 
     useEffect(() => {
         if (products.length === 0) fetchproducts();
-    }, []);
+    }, [products.length]);
 
     return { products, hasMore, fetchproducts, loading };
 };

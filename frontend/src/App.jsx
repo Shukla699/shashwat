@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 
-
 const themes = [
     {
         name: "Light",
@@ -68,7 +67,7 @@ const App = () => {
 
     useEffect(() => {
         !users && dispatch(asynccurrentuser());
-    }, [users]);
+    }, [users, dispatch]);
 
    
     const theme = themes[themeIdx];

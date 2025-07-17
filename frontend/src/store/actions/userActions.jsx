@@ -35,17 +35,17 @@ export const asyncloginuser = (user) => async (dispatch, getState) => {
             toast.error("Invalid email or password!");
         }
     } catch (error) {
-        console.log(error);
+        console.error("Login error:", error);
         toast.error("Login failed. Please try again.");
     }
 };
 
 export const asyncregisteruser = (user) => async (dispatch, getState) => {
     try {
-        const res = await axios.post("/users", user);
+        await axios.post("/users", user);
         toast.success("Registration successful! Please login.");
     } catch (error) {
-        console.log(error);
+        console.error("Registration error:", error);
         toast.error("Registration failed. Please try again.");
     }
 };
@@ -53,19 +53,24 @@ export const asyncregisteruser = (user) => async (dispatch, getState) => {
 export const asyncupdateuser =
     (id, user) => async (dispatch, getState) => {
         try {
-             const {data} = await axios.patch("/users/" + id, user);
-             localStorage.setItem("user", JSON.stringify(data));
-        dispatch(asynccurrentuser())
+            const { data } = await axios.patch("/users/" + id, user);
+            localStorage.setItem("user", JSON.stringify(data));
+            dispatch(asynccurrentuser());
+            toast.success("Profile updated successfully!");
            
         } catch (error) {
-            console.log(error);
+            console.error("Update user error:", error);
+            toast.error("Failed to update profile.");
         }
     };
-     export const asyncdeleteuser = (id) => async (dispatch, getState) => {
+
+export const asyncdeleteuser = (id) => async (dispatch, getState) => {
     try {
         await axios.delete("/users/" + id);
-        dispatch(asynclogoutuser())
+        dispatch(asynclogoutuser());
+        toast.success("Account deleted successfully!");
     } catch (error) {
-        console.log(error);
+        console.error("Delete user error:", error);
+        toast.error("Failed to delete account.");
     }
 };

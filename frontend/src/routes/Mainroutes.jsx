@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import AuthWrapper from "./AuthWrapper";
+import PageNotFound from "../pages/PageNotFound";
 
-const UnauthWrapper = lazy(() => import("./UnauthWrapper") )
+const UnauthWrapper = lazy(() => import("./UnauthWrapper"));
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
@@ -19,22 +20,22 @@ const MainRoutes = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                
-                 <Route
+                <Route
                 path="/login"
                 element={
                     <UnauthWrapper>
                         <Login />
                     </UnauthWrapper>
                 }
-            />
+                />
                 <Route
-                path="/register"
-                element={
-                    <UnauthWrapper>
-                        <Register />
-                    </UnauthWrapper>
-                }
-            />
+                    path="/register"
+                    element={
+                        <UnauthWrapper>
+                            <Register />
+                        </UnauthWrapper>
+                    }
+                />
                 <Route
                     path="/admin/create-product"
                     element={
@@ -67,6 +68,7 @@ const MainRoutes = () => {
                         </AuthWrapper>
                     }
                 />
+                <Route path="*" element={<PageNotFound />} />
             </Routes>
         </Suspense>
     );
