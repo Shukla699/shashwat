@@ -5,10 +5,14 @@ import { toast } from "react-toastify";
 export const asynccurrentuser = () => async (dispatch, getState) => {
     try {
         const user = JSON.parse(localStorage.getItem("user"));
-        if (user) dispatch(loaduser(user));
-        else console.log("User not logged in!");
+        if (user) {
+            console.log("Loading user from localStorage:", user.username);
+            dispatch(loaduser(user));
+        } else {
+            console.log("No user found in localStorage");
+        }
     } catch (error) {
-        console.log(error);
+        console.error("Error loading current user:", error);
     }
 };
 

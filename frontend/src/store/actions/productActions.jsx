@@ -4,11 +4,13 @@ import { toast } from "react-toastify";
 
 export const asyncloadproducts = () => async (dispatch, getState) => {
     try {
+        console.log('Loading products...');
         const { data } = await axios.get("/products");
+        console.log('Products loaded:', data.length);
         dispatch(loadproduct(data));
     } catch (error) {
         console.error("Load products error:", error);
-        toast.error("Failed to load products.");
+        toast.error("Failed to load products: " + (error.response?.data?.error || error.message));
     }
 };
 

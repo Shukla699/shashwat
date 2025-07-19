@@ -19,6 +19,7 @@ const writeDB = async (data) => {
 // GET all products with pagination support
 router.get('/', async (req, res) => {
   try {
+    console.log('GET /products - Query params:', req.query);
     const db = await readDB();
     let products = db.products;
 
@@ -26,12 +27,16 @@ router.get('/', async (req, res) => {
     const limit = parseInt(req.query._limit);
     const start = parseInt(req.query._start) || 0;
 
+    console.log(`Pagination - limit: ${limit}, start: ${start}, total products: ${products.length}`);
+
     if (limit) {
       products = products.slice(start, start + limit);
     }
 
+    console.log(`Returning ${products.length} products`);
     res.json(products);
   } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 });

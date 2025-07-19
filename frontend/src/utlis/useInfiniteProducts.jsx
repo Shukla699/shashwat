@@ -14,7 +14,9 @@ const useInfiniteProducts = () => {
         if (loading) return;
         setLoading(true);
         try {
+            console.log('Fetching products, current count:', products.length);
             const { data } = await axios.get(`/products?_limit=6&_start=${products.length}`);
+            console.log('Fetched products:', data.length);
             if (data.length === 0) {
                 setHasMore(false);
             } else {
@@ -23,6 +25,7 @@ const useInfiniteProducts = () => {
             }
         } catch (error) {
             console.error("Fetch products error:", error);
+            toast.error("Failed to fetch products: " + (error.response?.data?.error || error.message));
             setHasMore(false);
         } finally {
             setLoading(false);
@@ -30,7 +33,10 @@ const useInfiniteProducts = () => {
     };
 
     useEffect(() => {
-        if (products.length === 0) fetchproducts();
+        if (products.length === 0) {
+            console.log('Initial product fetch');
+            fetchproducts();
+        }
     }, [products.length]);
 
     return { products, hasMore, fetchproducts, loading };

@@ -19,18 +19,22 @@ const writeDB = async (data) => {
 // GET all users (with query support for login)
 router.get('/', async (req, res) => {
   try {
+    console.log('GET /users - Query params:', req.query);
     const db = await readDB();
     let users = db.users;
 
     // Support query parameters for login
     if (req.query.email && req.query.password) {
+      console.log(`Login attempt for email: ${req.query.email}`);
       users = users.filter(user => 
         user.email === req.query.email && user.password === req.query.password
       );
+      console.log(`Found ${users.length} matching users`);
     }
 
     res.json(users);
   } catch (error) {
+    console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
