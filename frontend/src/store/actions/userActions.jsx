@@ -28,19 +28,27 @@ export const asynclogoutuser = () => async (dispatch, getState) => {
 
 export const asyncloginuser = (user) => async (dispatch, getState) => {
     try {
+        console.log('🔐 Attempting login for:', user.email);
         const { data } = await axios.get(
             `/users?email=${user.email}&password=${user.password}`
         );
+        console.log('📥 Login response:', data);
         if (data.length > 0) {
             localStorage.setItem("user", JSON.stringify(data[0]));
             dispatch(asynccurrentuser());
             toast.success("Login successful!");
+            console.log('✅ Login successful for:', data[0].username);
         } else {
             toast.error("Invalid email or password!");
+            console.log('❌ Login failed: Invalid credentials');
         }
     } catch (error) {
         console.error("Login error:", error);
-        toast.error("Login failed. Please try again.");
+        if (error.code === 'ECONNREFUSED' || !error.response) {
+            toast.error("Cannot connect to server. Please make sure the backend is running.");
+        } else {
+            toast.error("Login failed. Please try again.");
+        }
     }
 };
 

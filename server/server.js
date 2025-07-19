@@ -10,21 +10,43 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Ensure data directory and db.json exist
-const dataDir = path.join(process.cwd(), 'data');
+const dataDir = path.join(process.cwd(), '..', 'data');
 const dbPath = path.join(dataDir, 'db.json');
+
+console.log('📁 Data directory:', dataDir);
+console.log('📄 Database path:', dbPath);
 
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
+    console.log('✅ Created data directory');
 }
 
 if (!fs.existsSync(dbPath)) {
     const initialData = {
-        users: [],
-        products: [],
+        users: [
+            {
+                "id": "admin-user-123",
+                "username": "admin",
+                "email": "admin@store.com",
+                "password": "admin123",
+                "isAdmin": true,
+                "cart": []
+            }
+        ],
+        products: [
+            {
+                "id": "1",
+                "title": "Sample Product",
+                "price": 29.99,
+                "description": "This is a sample product to get you started",
+                "category": "electronics",
+                "image": "https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg"
+            }
+        ],
         carts: []
     };
     fs.writeFileSync(dbPath, JSON.stringify(initialData, null, 2));
-    console.log('Created initial db.json file');
+    console.log('✅ Created initial db.json file with sample data');
 }
 
 // Middleware
@@ -46,9 +68,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Add request logging
 app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    console.log(`📝 ${new Date().toISOString()} - ${req.method} ${req.path}`);
     if (req.body && Object.keys(req.body).length > 0) {
-        console.log('Request body:', JSON.stringify(req.body, null, 2));
+        console.log('📦 Request body:', JSON.stringify(req.body, null, 2));
     }
     next();
 });
@@ -66,31 +88,34 @@ app.get('/health', (req, res) => {
     res.json({ 
         status: 'OK', 
         timestamp: new Date().toISOString(),
-        port: PORT 
+        port: PORT,
+        database: fs.existsSync(dbPath) ? 'Connected' : 'Not Found'
     });
 });
 
 // Root endpoint
 app.get('/', (req, res) => {
     res.json({ 
-        message: 'E-commerce API Server',
+        message: '🛍️ E-commerce API Server',
+        version: '1.0.0',
         endpoints: {
             users: '/users',
             products: '/products',
             health: '/health'
-        }
+        },
+        status: 'Running'
     });
 });
 
 // 404 handler
 app.use('*', (req, res) => {
-    console.log(`404 - Route not found: ${req.method} ${req.originalUrl}`);
+    console.log(`❌ 404 - Route not found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({ error: 'Route not found' });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.error('Server error:', err.stack);
+    console.error('💥 Server error:', err.stack);
     res.status(500).json({ error: 'Something went wrong!' });
 });
 
@@ -98,6 +123,7 @@ app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`📊 Health check: http://localhost:${PORT}/health`);
     console.log(`📁 Database file: ${dbPath}`);
+    console.log(`✅ Server is ready to accept connections`);
 });
 
 export default app;

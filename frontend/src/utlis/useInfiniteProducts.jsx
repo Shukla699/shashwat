@@ -14,9 +14,9 @@ const useInfiniteProducts = () => {
         if (loading) return;
         setLoading(true);
         try {
-            console.log('Fetching products, current count:', products.length);
+            console.log('🔄 Fetching products, current count:', products.length);
             const { data } = await axios.get(`/products?_limit=6&_start=${products.length}`);
-            console.log('Fetched products:', data.length);
+            console.log('✅ Fetched products:', data.length);
             if (data.length === 0) {
                 setHasMore(false);
             } else {
@@ -24,8 +24,12 @@ const useInfiniteProducts = () => {
                 dispatch(loadlazyproduct(data));
             }
         } catch (error) {
-            console.error("Fetch products error:", error);
-            toast.error("Failed to fetch products: " + (error.response?.data?.error || error.message));
+            console.error("❌ Fetch products error:", error);
+            if (error.code === 'ECONNREFUSED' || !error.response) {
+                toast.error("Cannot connect to server. Please make sure the backend is running.");
+            } else {
+                toast.error("Failed to fetch products: " + (error.response?.data?.error || error.message));
+            }
             setHasMore(false);
         } finally {
             setLoading(false);

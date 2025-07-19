@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const router = express.Router();
-const dbPath = path.join(process.cwd(), 'data/db.json');
+const dbPath = path.join(process.cwd(), '..', 'data', 'db.json');
 
 // Helper function to read database
 const readDB = async () => {
@@ -11,8 +11,7 @@ const readDB = async () => {
         const data = await fs.readFile(dbPath, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        console.error('Error reading database:', error);
-        // Return default structure if file doesn't exist
+        console.error('❌ Error reading database:', error);
         return { users: [], products: [], carts: [] };
     }
 };
@@ -21,9 +20,9 @@ const readDB = async () => {
 const writeDB = async (data) => {
     try {
         await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
-        console.log('Database updated successfully');
+        console.log('✅ Database updated successfully');
     } catch (error) {
-        console.error('Error writing database:', error);
+        console.error('❌ Error writing database:', error);
         throw error;
     }
 };
@@ -31,7 +30,7 @@ const writeDB = async (data) => {
 // GET all products with pagination support
 router.get('/', async (req, res) => {
     try {
-        console.log('GET /products - Query params:', req.query);
+        console.log('🛍️ GET /products - Query params:', req.query);
         const db = await readDB();
         let products = db.products || [];
 
@@ -39,16 +38,16 @@ router.get('/', async (req, res) => {
         const limit = parseInt(req.query._limit);
         const start = parseInt(req.query._start) || 0;
 
-        console.log(`Pagination - limit: ${limit}, start: ${start}, total products: ${products.length}`);
+        console.log(`📄 Pagination - limit: ${limit}, start: ${start}, total products: ${products.length}`);
 
         if (limit && !isNaN(limit)) {
             products = products.slice(start, start + limit);
         }
 
-        console.log(`Returning ${products.length} products`);
+        console.log(`✅ Returning ${products.length} products`);
         res.json(products);
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('❌ Error fetching products:', error);
         res.status(500).json({ error: 'Failed to fetch products' });
     }
 });
@@ -65,7 +64,7 @@ router.get('/:id', async (req, res) => {
         
         res.json(product);
     } catch (error) {
-        console.error('Error fetching product:', error);
+        console.error('❌ Error fetching product:', error);
         res.status(500).json({ error: 'Failed to fetch product' });
     }
 });
@@ -81,10 +80,10 @@ router.post('/', async (req, res) => {
         db.products.push(newProduct);
         await writeDB(db);
         
-        console.log('Product created successfully:', newProduct.title);
+        console.log('✅ Product created successfully:', newProduct.title);
         res.status(201).json(newProduct);
     } catch (error) {
-        console.error('Error creating product:', error);
+        console.error('❌ Error creating product:', error);
         res.status(500).json({ error: 'Failed to create product' });
     }
 });
@@ -104,10 +103,10 @@ router.patch('/:id', async (req, res) => {
         db.products[productIndex] = { ...db.products[productIndex], ...req.body };
         await writeDB(db);
         
-        console.log('Product updated successfully:', db.products[productIndex].title);
+        console.log('✅ Product updated successfully:', db.products[productIndex].title);
         res.json(db.products[productIndex]);
     } catch (error) {
-        console.error('Error updating product:', error);
+        console.error('❌ Error updating product:', error);
         res.status(500).json({ error: 'Failed to update product' });
     }
 });
@@ -128,10 +127,10 @@ router.delete('/:id', async (req, res) => {
         db.products.splice(productIndex, 1);
         await writeDB(db);
         
-        console.log('Product deleted successfully:', deletedProduct.title);
+        console.log('✅ Product deleted successfully:', deletedProduct.title);
         res.status(204).send();
     } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error('❌ Error deleting product:', error);
         res.status(500).json({ error: 'Failed to delete product' });
     }
 });

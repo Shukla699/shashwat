@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const router = express.Router();
-const dbPath = path.join(process.cwd(), 'data/db.json');
+const dbPath = path.join(process.cwd(), '..', 'data', 'db.json');
 
 // Helper function to read database
 const readDB = async () => {
@@ -11,8 +11,7 @@ const readDB = async () => {
         const data = await fs.readFile(dbPath, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        console.error('Error reading database:', error);
-        // Return default structure if file doesn't exist
+        console.error('❌ Error reading database:', error);
         return { users: [], products: [], carts: [] };
     }
 };
@@ -21,9 +20,9 @@ const readDB = async () => {
 const writeDB = async (data) => {
     try {
         await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
-        console.log('Database updated successfully');
+        console.log('✅ Database updated successfully');
     } catch (error) {
-        console.error('Error writing database:', error);
+        console.error('❌ Error writing database:', error);
         throw error;
     }
 };
@@ -31,22 +30,22 @@ const writeDB = async (data) => {
 // GET all users (with query support for login)
 router.get('/', async (req, res) => {
     try {
-        console.log('GET /users - Query params:', req.query);
+        console.log('👥 GET /users - Query params:', req.query);
         const db = await readDB();
         let users = db.users || [];
 
         // Support query parameters for login
         if (req.query.email && req.query.password) {
-            console.log(`Login attempt for email: ${req.query.email}`);
+            console.log(`🔐 Login attempt for email: ${req.query.email}`);
             users = users.filter(user => 
                 user.email === req.query.email && user.password === req.query.password
             );
-            console.log(`Found ${users.length} matching users`);
+            console.log(`✅ Found ${users.length} matching users`);
         }
 
         res.json(users);
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('❌ Error fetching users:', error);
         res.status(500).json({ error: 'Failed to fetch users' });
     }
 });
@@ -63,7 +62,7 @@ router.get('/:id', async (req, res) => {
         
         res.json(user);
     } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error('❌ Error fetching user:', error);
         res.status(500).json({ error: 'Failed to fetch user' });
     }
 });
@@ -88,10 +87,10 @@ router.post('/', async (req, res) => {
         db.users.push(newUser);
         await writeDB(db);
         
-        console.log('User created successfully:', newUser.email);
+        console.log('✅ User created successfully:', newUser.email);
         res.status(201).json(newUser);
     } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('❌ Error creating user:', error);
         res.status(500).json({ error: 'Failed to create user' });
     }
 });
@@ -111,10 +110,10 @@ router.patch('/:id', async (req, res) => {
         db.users[userIndex] = { ...db.users[userIndex], ...req.body };
         await writeDB(db);
         
-        console.log('User updated successfully:', db.users[userIndex].email);
+        console.log('✅ User updated successfully:', db.users[userIndex].email);
         res.json(db.users[userIndex]);
     } catch (error) {
-        console.error('Error updating user:', error);
+        console.error('❌ Error updating user:', error);
         res.status(500).json({ error: 'Failed to update user' });
     }
 });
@@ -135,10 +134,10 @@ router.delete('/:id', async (req, res) => {
         db.users.splice(userIndex, 1);
         await writeDB(db);
         
-        console.log('User deleted successfully:', deletedUser.email);
+        console.log('✅ User deleted successfully:', deletedUser.email);
         res.status(204).send();
     } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error('❌ Error deleting user:', error);
         res.status(500).json({ error: 'Failed to delete user' });
     }
 });

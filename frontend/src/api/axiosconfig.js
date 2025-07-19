@@ -2,7 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL: "http://localhost:3000",
-    timeout: 10000,
+    timeout: 15000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -12,11 +12,11 @@ const instance = axios.create({
 // Request interceptor
 instance.interceptors.request.use(
     (config) => {
-        console.log('Making request to:', config.baseURL + config.url);
+        console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
         return config;
     },
     (error) => {
-        console.error('Request error:', error);
+        console.error('❌ Request error:', error);
         return Promise.reject(error);
     }
 );
@@ -24,15 +24,22 @@ instance.interceptors.request.use(
 // Response interceptor
 instance.interceptors.response.use(
     (response) => {
-        console.log('Response received:', response.status, 'from', response.config.url);
+        console.log(`✅ API Response: ${response.status} from ${response.config.url}`);
         return response;
     },
     (error) => {
-        console.error('API Error:', {
+        console.error('❌ API Error:', {
             url: error.config?.url,
             status: error.response?.status,
-            message: error.response?.data?.error || error.message
+            message: error.response?.data?.error || error.message,
+            data: error.response?.data
         });
+        
+        // Handle network errors
+        if (!error.response) {
+            console.error('🌐 Network Error: Backend server might be down');
+        }
+        
         return Promise.reject(error);
     }
 );
