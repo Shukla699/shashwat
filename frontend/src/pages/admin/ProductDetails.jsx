@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from 'react-toastify';
 import {
     asyncdeleteproduct,
     asyncupdateproduct,
@@ -30,10 +31,12 @@ const ProductDetails = () => {
 
     const UpdateProductHandler = (updatedProduct) => {
         dispatch(asyncupdateproduct(id, updatedProduct));
+        toast.success("Product updated successfully!");
     };
 
     const DeleteHandler = () => {
         dispatch(asyncdeleteproduct(id));
+        toast.success("Product deleted successfully!");
         navigate("/");
     };
 

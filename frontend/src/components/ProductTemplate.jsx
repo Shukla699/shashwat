@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { asyncupdateuser } from '../store/actions/userActions';
 
 const ProductTemplate = ({ product }) => {
@@ -9,7 +10,11 @@ const ProductTemplate = ({ product }) => {
     const users = useSelector((state) => state.userReducer.users);
 
     const addToCartHandler = (product) => {
-        if (!users) return;
+        if (!users) {
+            toast.error("Please login to add items to cart");
+            navigate("/login");
+            return;
+        }
         
         const copyUser = Array.isArray(users.cart)
             ? { ...users, cart: [...users.cart] }
@@ -28,8 +33,8 @@ const ProductTemplate = ({ product }) => {
 
         if (copyUser.id) {
             dispatch(asyncupdateuser(copyUser.id, copyUser));
+            toast.success("Product added to cart!");
         }
-        navigate("/cart");
     };
 
     return (

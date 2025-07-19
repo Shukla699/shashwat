@@ -12,7 +12,7 @@ const instance = axios.create({
 // Request interceptor
 instance.interceptors.request.use(
     (config) => {
-        console.log('Making request to:', config.url);
+        console.log('Making request to:', config.baseURL + config.url);
         return config;
     },
     (error) => {
@@ -24,11 +24,15 @@ instance.interceptors.request.use(
 // Response interceptor
 instance.interceptors.response.use(
     (response) => {
-        console.log('Response received:', response.status);
+        console.log('Response received:', response.status, 'from', response.config.url);
         return response;
     },
     (error) => {
-        console.error('API Error:', error.response?.data || error.message);
+        console.error('API Error:', {
+            url: error.config?.url,
+            status: error.response?.status,
+            message: error.response?.data?.error || error.message
+        });
         return Promise.reject(error);
     }
 );

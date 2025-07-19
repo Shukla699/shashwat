@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadlazyproduct } from '../store/reducers/productSlice';
+import { toast } from 'react-toastify';
 import axios from "../api/axiosconfig.js";
-
 
 const useInfiniteProducts = () => {
     const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const useInfiniteProducts = () => {
             console.log('Initial product fetch');
             fetchproducts();
         }
-    }, [products.length]);
+    }, []);
 
     return { products, hasMore, fetchproducts, loading };
 };
